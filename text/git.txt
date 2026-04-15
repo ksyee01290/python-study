@@ -1,5 +1,5 @@
+git pull 다른곳에서 수정 올린 내용을 받는 작업
+
 git add .
 git commit -m "설명"
 git push
-
-이거 되나
