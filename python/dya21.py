@@ -11,12 +11,12 @@ while True:
     if num == 1:
         sight = input("사이트명 입력:")
         password = input("비밀번호 입력:")
-        with open("passwords.txt", "a", encoding="utf-8") as f:
+        with open("text/passwords.txt", "a", encoding="utf-8") as f:
             f.write(f"{sight},{password}\n")
 
     elif num == 2:
         sight = input("사이트명 입력:")
-        with open("passwords.txt", "r", encoding="utf-8") as f:
+        with open("text/passwords.txt", "r", encoding="utf-8") as f:
             for line in f:
                 data = line.strip().split(",")
                 if data[0] == sight:
@@ -26,13 +26,13 @@ while True:
         sight = input("사이트명 입력:")
         lines = []
 
-        with open("passwords.txt", "r", encoding="utf-8") as f:
+        with open("text/passwords.txt", "r", encoding="utf-8") as f:
             for line in f:
                 data = line.strip().split(",")
                 if data[0] != sight:
                     lines.append(line)
 
-        with open("passwords.txt", "w", encoding="utf-8") as f:
+        with open("text/passwords.txt", "w", encoding="utf-8") as f:
             f.writelines(lines)
                 
     elif num == 4:
