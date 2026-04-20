@@ -1,33 +1,38 @@
-def save_password():
-    site = input("사이트명 입력:")
-    password = input("비밀번호 입력:")
-    passwords[site] = password
-    print(f"{site}에 저장되었습니다.")
+class PasswordManager:
+    def __init__(self):
+        self.passwords = {}
+        self.load_passwords()
 
-def search_password():
-    site = input("사이트명 입력:")
-    print(passwords[site])
+    def save_password(self):
+        site = input("사이트명 입력:")
+        password = input("비밀번호 입력:")
+        self.passwords[site] = password
+        print(f"{site}에 저장되었습니다.")
 
-def delete_password():
-    site = input("사이트명 입력:")
-    del passwords[site]
+    def search_password(self):
+        site = input("사이트명 입력:")
+        if site in self.passwords:
+            print(self.passwords[site])
 
-def exit_program():
-    with open("text/passwords.txt","w", encoding="utf-8") as f:
-        for key, value in passwords.items():
-            f.write(f"{key},{value}\n")   
+    def delete_password(self):
+        site = input("사이트명 입력:")
+        del self.passwords[site]
 
-def load_passwords():
-    try:
-        with open("text/passwords.txt", "r", encoding="utf-8") as f:
-            for line in f:
-                data = line.strip().split(",")
-                passwords[data[0]] = data[1]
-    except Exception as e:
-        print("에러발생:", e)
+    def exit_program(self):
+        with open("text/passwords.txt","w", encoding="utf-8") as f:
+            for key, value in self.passwords.items():
+                f.write(f"{key},{value}\n")   
 
-passwords = {}
-load_passwords()
+    def load_passwords(self):
+        try:
+            with open("text/passwords.txt", "r", encoding="utf-8") as f:
+                for line in f:
+                    data = line.strip().split(",")
+                    self.passwords[data[0]] = data[1]
+        except FileNotFoundError:
+            pass
+
+pm = PasswordManager()
 
 while True:
     print("메뉴 출력")
@@ -39,11 +44,11 @@ while True:
     num = int(input("메뉴 입력:"))
 
     if num == 1:
-        save_password()
+        pm.save_password()
     elif num == 2:
-        search_password()
+        pm.search_password()
     elif num == 3:
-        delete_password()             
+        pm.delete_password()             
     elif num == 4:
-        exit_program()
+        pm.exit_program()
         break
