@@ -16,7 +16,8 @@ class PasswordManager:
 
     def delete_password(self):
         site = input("사이트명 입력:")
-        del self.passwords[site]
+        if site in self.passwords:
+            del self.passwords[site]
 
     def exit_program(self):
         with open("text/passwords.txt","w", encoding="utf-8") as f:
