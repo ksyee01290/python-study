@@ -7,12 +7,16 @@ with open("csv/students.csv", "r", encoding="utf-8") as f:
     next(reader)
 
     for row in reader:
-        scores.append(row)
+        scores.append(int(row[2]))
+avg = sum(scores)/len(scores)
+max_score = max(scores)
+min_score = min(scores)
 
-scores.sort(key=lambda x: int(x[2]), reverse=True)
-
-for row in scores:
-    print(row)
+with open("report.txt","w",encoding="utf-8") as f:
+    f.write("=== 성적 보고서 ===\n")
+    f.write(f"평균:{avg}점\n")
+    f.write(f"최고점: {max_score}점\n")
+    f.write(f"최저점: {min_score}점\n")
 
 
 
