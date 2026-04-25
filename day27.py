@@ -4,7 +4,7 @@ import json
 city = input("도시 이름 입력: ")
 
 try:
-    response = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid=f31f56b24ff5ce60edf1fedf749ee5b8&units=metric")
+    response = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid=&units=metric")
     if response.status_code == 200:
         data = response.json()
 
