@@ -1,10 +1,12 @@
-import requests
-import json
+from dotenv import load_dotenv
+import requests, json, os
 
+load_dotenv()
+api_key = os.getenv("API_KEY")
 city = input("도시 이름 입력: ")
 
 try:
-    response = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid=&units=metric")
+    response = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric")
     if response.status_code == 200:
         data = response.json()
 
@@ -14,6 +16,8 @@ try:
         print(f"온도 : {data["main"]["temp"]}")
         print(f"날씨 : {data["weather"][0]["description"]}")
         print(f"지역 : {data["name"]}")
+        print(f"습도 : {data["main"]["humidity"]}")
+        print(f"체감온도 : {data["main"]["feels_like"]}")
         
     else:
         print("존재하지 않는 도시입니다.")
