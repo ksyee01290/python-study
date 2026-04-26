@@ -11,13 +11,13 @@ try:
         data = response.json()
 
         print(json.dumps(data,indent=2))
-
-        print(f"{city} 현재 날씨")
-        print(f"온도 : {data["main"]["temp"]}")
-        print(f"날씨 : {data["weather"][0]["description"]}")
-        print(f"지역 : {data["name"]}")
-        print(f"습도 : {data["main"]["humidity"]}")
-        print(f"체감온도 : {data["main"]["feels_like"]}")
+        with open("weather.txt","w",encoding="utf-8") as f:
+            f.write(f"{city} 현재 날씨\n")
+            f.write(f"온도 : {data["main"]["temp"]}\n")
+            f.write(f"날씨 : {data["weather"][0]["description"]}\n")
+            f.write(f"지역 : {data["name"]}\n")
+            f.write(f"습도 : {data["main"]["humidity"]}\n")
+            f.write(f"체감온도 : {data["main"]["feels_like"]}\n")
         
     else:
         print("존재하지 않는 도시입니다.")
