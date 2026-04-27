@@ -1,5 +1,6 @@
 import yfinance as yf
 from datetime import datetime
+import time
 
 def save_stock(now, name, price, marketCap):
     with open("stock.txt","a",encoding="utf-8") as f:
@@ -17,6 +18,7 @@ stocks = {
 }
 try:
     name = input("종목 입력: ")
+    start = time.time()
     code = stocks[name]
     stock= yf.Ticker(code)
 
@@ -45,3 +47,6 @@ except KeyError:
     print("오류")
 except Exception as e:
     print("데이터를 가져올수없음")
+
+end = time.time()
+print(f"실행시간 : {end - start:.2f}초")
