@@ -1,13 +1,16 @@
 import tkinter as tk
 import yfinance as yf
-import matplotlib.pyplot as plt
+import matplotlib as mpl
+import mplfinance as mpf
+
+mpl.rcParams['font.family'] = 'Malgun Gothic'
 
 stocks = {
-    "삼성전자" : "005930.KS",
-    "앤비디아" : "NVDA",
-    "애플" : "AAPL",
-    "하이닉스" : "000660.KS",
-    "아메리칸익스프레스" : "AXP"
+    "삼성전자" : ("005930.KS","Samsung"),
+    "앤비디아" : ("NVDA","NVIDIA"),
+    "애플" : ("AAPL","APPLE"),
+    "하이닉스" : ("000660.KS","SK"),
+    "아메리칸익스프레스" : ("AXP","AMEX"),
 }
 
 def search():
@@ -16,7 +19,7 @@ def search():
     window.update()
 
     name = entry.get()
-    code = stocks[name]
+    code = stocks[name][0]
     
     stock= yf.Ticker(code)
     info = stock.info
@@ -32,19 +35,29 @@ def search():
     result.insert(tk.END, f"52주 최저가: {twoweeklow:,}원\n")
     result.insert(tk.END, f"등락률: {regularmcp:,}원\n")
 
-def show_graph():
-    plt.figure(figsize=(12, 6))
-    name = entry.get()
-    code = stocks[name]
-    stock = yf.Ticker(code)
-    history = stock.history(period="1mo")
+# def show_graph():
+#     plt.figure(figsize=(12, 6))
+#     name = entry.get()
+#     code = stocks[name]
+#     stock = yf.Ticker(code)
+#     history = stock.history(period="1mo")
 
-    plt.rcParams['font.family'] = 'Malgun Gothic'
-    plt.xticks(rotation=45)
-    plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f"{int(x):,}"))
-    plt.plot(history["Close"])
-    plt.title(name)
-    plt.show()
+#     plt.rcParams['font.family'] = 'Malgun Gothic'
+#     plt.xticks(rotation=45)
+#     plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f"{int(x):,}"))
+#     plt.plot(history["Close"])
+#     plt.title(name)
+#     plt.show()
+
+def show_graph():
+    name = entry.get()
+    code = stocks[name][0]
+    eng_name = stocks[name][1]
+    stock = yf.Ticker(code)
+    history = stock.history(period="6mo")
+
+    mpf.plot(history, type='candle', style='yahoo', title=eng_name, figsize=(12,6),
+            show_nontrading=True, datetime_format='%m/%d')
 
 window = tk.Tk()
 window.title("StockChecker")
