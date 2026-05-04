@@ -2,6 +2,7 @@ import tkinter as tk
 import yfinance as yf
 import matplotlib as mpl
 import mplfinance as mpf
+import matplotlib.pyplot as plt
 
 mpl.rcParams['font.family'] = 'Malgun Gothic'
 
@@ -13,27 +14,56 @@ stocks = {
     "아메리칸익스프레스" : ("AXP","AMEX"),
 }
 
+EXCHANGE_RATE = 1350
+
 def search():
     result.delete(1.0, tk.END)
     result.insert(tk.END, "조회 중...\n")
     window.update()
 
     name = entry.get()
-    code = stocks[name][0]
+
+    if name not in stocks:
+        result.delete(1.0, tk.END)
+        result.insert(tk.END, f"'{name}'은 목록에 없는 종목입니다.")
+        return
     
+    code = stocks[name][0]
     stock= yf.Ticker(code)
     info = stock.info
-    price = int(info["currentPrice"])
-    marketCap = info["marketCap"]
-    twoweekhigh = int(info["fiftyTwoWeekHigh"])
-    twoweeklow = int(info["fiftyTwoWeekLow"])
-    regularmcp = int(info["regularMarketChangePercent"])
+
+    currency = info.get("currency")
+
+    raw_price = info.get("currentPrice", 0)
+    marketCap = info.get("marketCap", 0)
+    twoweekhigh = info.get("fiftyTwoWeekHigh", 0)
+    twoweeklow = info.get("fiftyTwoWeekLow", 0)
+    regularmcp = info.get("regularMarketChangePercent", 0)
     
+    if currency == "USD":
+        price = int(raw_price * EXCHANGE_RATE)
+        m_cap = int(marketCap * EXCHANGE_RATE)
+        high = int(twoweekhigh * EXCHANGE_RATE)
+        low = int(twoweeklow * EXCHANGE_RATE)
+        unit_info = f"적용 환율: {EXCHANGE_RATE}원 (달러 기준)"
+    else:
+        price = int(raw_price)
+        m_cap = marketCap
+        high = int(twoweekhigh)
+        low = int(twoweeklow)
+        unit_info = "기준 화폐: 원화(KRW)"
+
+    result.delete(1.0, tk.END)
+    result.insert(tk.END, f"[{name} 정보] - {unit_info}\n")
     result.insert(tk.END, f"현재가: {price:,}원\n")
-    result.insert(tk.END, f"시가총액: {marketCap:,}원\n")
-    result.insert(tk.END, f"52주 최고가: {twoweekhigh:,}원\n")
-    result.insert(tk.END, f"52주 최저가: {twoweeklow:,}원\n")
-    result.insert(tk.END, f"등락률: {regularmcp:,}원\n")
+
+    if currency == "USD":
+        result.insert(tk.END, f"현지 가격: ${raw_price:,.2f}\n")
+    
+    result.insert(tk.END, f"시가총액: {m_cap:,}원\n")
+    result.insert(tk.END, f"52주 최고가: {high:,}원\n")
+    result.insert(tk.END, f"52주 최저가: {low:,}원\n")
+    result.insert(tk.END, f"등락률: {regularmcp:.2f}%\n")
 
 # def show_graph():
 #     plt.figure(figsize=(12, 6))
@@ -58,11 +88,36 @@ def show_graph():
 
     mpf.plot(history, type='candle', style='yahoo', title=eng_name, figsize=(12,6),
             show_nontrading=True, datetime_format='%m/%d')
+    
+def compare_stocks():
+    raw_input = entry.get() 
+    split_list = raw_input.split(',')
+
+    names = []
+    for n in split_list:
+        clean_name = n.strip()
+        names.append(clean_name)
+    
+    plt.figure(figsize=(12, 6))
+    
+    for name in names:
+        if name in stocks:
+            code = stocks[name][0]
+            stock_data = yf.Ticker(code)
+            history = stock_data.history(period="3mo")["Close"]
+            
+            yields = (history / history.iloc[0] - 1) * 100
+            plt.plot(yields, label=name)
+            
+    plt.title("종목 비교 (수익률 %)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 window = tk.Tk()
 window.title("StockChecker")
 
-result = tk.Text(window, height=10, width=40)
+result = tk.Text(window, height=15, width=60)
 result.pack()
 
 label = tk.Label(window, text="종목 입력")
@@ -77,5 +132,8 @@ button.pack()
 
 graph_button = tk.Button(window, text="그래프", command=show_graph)
 graph_button.pack()
+
+compare_button = tk.Button(window, text="종목 비교", command=compare_stocks)
+compare_button.pack()
 
 window.mainloop()
