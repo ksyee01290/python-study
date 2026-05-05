@@ -127,13 +127,18 @@ entry = tk.Entry(window)
 entry.bind("<Return>", lambda event: search())
 entry.pack()
 
-button = tk.Button(window, text="조회", command=search)
-button.pack()
+button_frame = tk.Frame(window)
+button_frame.pack(pady=10)
 
-graph_button = tk.Button(window, text="그래프", command=show_graph)
-graph_button.pack()
+btn_width = 15
 
-compare_button = tk.Button(window, text="종목 비교", command=compare_stocks)
-compare_button.pack()
+button = tk.Button(button_frame, text="조회", command=search, width=btn_width)
+button.grid(row=0, column=0, padx=5)
+
+graph_button = tk.Button(button_frame, text="그래프", command=show_graph, width=btn_width)
+graph_button.grid(row=0, column=1, padx=5)
+
+compare_button = tk.Button(button_frame, text="종목 비교", command=compare_stocks, width=btn_width)
+compare_button.grid(row=0, column=2, padx=5)
 
 window.mainloop()
