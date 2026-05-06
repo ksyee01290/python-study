@@ -3,6 +3,7 @@ import yfinance as yf
 import matplotlib as mpl
 import mplfinance as mpf
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 mpl.rcParams['font.family'] = 'Malgun Gothic'
 
@@ -113,6 +114,15 @@ def compare_stocks():
     plt.legend()
     plt.grid(True)
     plt.show()
+    
+    def save_stock(now, name, price, marketCap):
+        with open("stock.txt","a",encoding="utf-8") as f:
+            f.write(f"=== {now}===\n")
+            f.write(f"회사이름 : {name}\n")
+            f.write(f"현재가: {price}\n")
+            f.write(f"시가총액:{marketCap}\n")
+            
+now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 window = tk.Tk()
 window.title("StockChecker")
@@ -140,5 +150,9 @@ graph_button.grid(row=0, column=1, padx=5)
 
 compare_button = tk.Button(button_frame, text="종목 비교", command=compare_stocks, width=btn_width)
 compare_button.grid(row=0, column=2, padx=5)
+
+button_frame = tk.Button(button_frame, text="저장", command=save_stock, width=btn_width)
+button_frame.grid(row=0, column=0, padx=5)
+
 
 window.mainloop()
