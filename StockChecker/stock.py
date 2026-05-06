@@ -15,6 +15,8 @@ stocks = {
     "아메리칸익스프레스" : ("AXP","AMEX"),
 }
 
+current_data = {}
+
 EXCHANGE_RATE = 1350
 
 def search():
@@ -65,6 +67,11 @@ def search():
     result.insert(tk.END, f"52주 최고가: {high:,}원\n")
     result.insert(tk.END, f"52주 최저가: {low:,}원\n")
     result.insert(tk.END, f"등락률: {regularmcp:.2f}%\n")
+    current_data["name"] = name
+    current_data["price"] = price
+    current_data["marketCap"] = m_cap
+    current_data["twoweekhigh"] = high
+    current_data["twoweeklow"] = low    
 
 # def show_graph():
 #     plt.figure(figsize=(12, 6))
@@ -115,14 +122,15 @@ def compare_stocks():
     plt.grid(True)
     plt.show()
     
-def save_stock(now, name, price, marketCap):
+def save_stock():
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open("stock.txt","a",encoding="utf-8") as f:
         f.write(f"=== {now}===\n")
-        f.write(f"회사이름 : {name}\n")
-        f.write(f"현재가: {price}\n")
-        f.write(f"시가총액:{marketCap}\n")
-            
-now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        f.write(f"회사이름 : {current_data['name']}\n")
+        f.write(f"현재가: {current_data['price']:,}원\n")
+        f.write(f"시가총액:{current_data['marketCap']:,}원\n")
+        f.write(f"52주 최고가:{current_data['twoweekhigh']:,}원\n")
+        f.write(f"52주 최저가:{current_data['twoweeklow']:,}원\n")
 
 window = tk.Tk()
 window.title("StockChecker")
@@ -152,7 +160,7 @@ compare_button = tk.Button(button_frame, text="종목 비교", command=compare_s
 compare_button.grid(row=0, column=2, padx=5)
 
 button_frame = tk.Button(button_frame, text="저장", command=save_stock, width=btn_width)
-button_frame.grid(row=0, column=0, padx=5)
+button_frame.grid(row=0, column=3, padx=5)
 
 
 window.mainloop()
