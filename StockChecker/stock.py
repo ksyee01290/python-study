@@ -115,12 +115,12 @@ def compare_stocks():
     plt.grid(True)
     plt.show()
     
-    def save_stock(now, name, price, marketCap):
-        with open("stock.txt","a",encoding="utf-8") as f:
-            f.write(f"=== {now}===\n")
-            f.write(f"회사이름 : {name}\n")
-            f.write(f"현재가: {price}\n")
-            f.write(f"시가총액:{marketCap}\n")
+def save_stock(now, name, price, marketCap):
+    with open("stock.txt","a",encoding="utf-8") as f:
+        f.write(f"=== {now}===\n")
+        f.write(f"회사이름 : {name}\n")
+        f.write(f"현재가: {price}\n")
+        f.write(f"시가총액:{marketCap}\n")
             
 now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
