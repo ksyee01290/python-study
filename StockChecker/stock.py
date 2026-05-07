@@ -88,6 +88,10 @@ def search():
 #     plt.show()
 
 def show_graph():
+    if not current_data:
+        result.insert(tk.END, "종목을 먼저 조회해주세요.\n")
+        return
+    
     name = entry.get()
     code = stocks[name][0]
     eng_name = stocks[name][1]
@@ -123,6 +127,10 @@ def compare_stocks():
     plt.show()
     
 def save_stock():
+    if not current_data:
+        result.insert(tk.END, "종목을 먼저 조회해주세요.\n")
+        return
+    
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open("stock.txt","a",encoding="utf-8") as f:
         f.write(f"=== {now}===\n")
