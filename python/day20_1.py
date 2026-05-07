@@ -18,9 +18,9 @@ forders = {
     ".csv": "csv",
     ".jpg": "image",
     ".png": "image",
-    ".mp4": "video",
-    ".mp3": "music",
-    ".pdf": "pdf"
+    # ".mp4": "video",
+    # ".mp3": "music",
+    # ".pdf": "pdf"
 }
 
 for forder_name in forders.values():
